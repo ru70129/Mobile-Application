@@ -1,2 +1,2 @@
-// Authentication screens - Login, Signup, Forgot Password, etc.
-// To be implemented
+export { default as LoginScreen } from './LoginScreen';
+export { default as SignupScreen } from './SignupScreen';
