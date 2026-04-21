@@ -1,2 +1,2 @@
 // ViewModels for MVVM architecture
-// To be implemented
+export { useAuthViewModel } from './authViewModel';

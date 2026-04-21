@@ -1,29 +1,18 @@
 import { create } from 'zustand';
 
 // Authentication store using Zustand
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
-  isAuthenticated: false,
-  isLoading: false,
-  error: null,
 
-  initializeAuth: async () => {
-    // To be implemented
+  login: (user) => set({ user }),
+
+  logout: () => set({ user: null }),
+
+  initializeAuth: () => {
+    // No-op for simple implementation
   },
 
-  login: async (credentials) => {
-    // To be implemented
-  },
-
-  signup: async (userData) => {
-    // To be implemented
-  },
-
-  logout: () => {
-    // To be implemented
-  },
-
-  resetPassword: async (email) => {
-    // To be implemented
+  get isAuthenticated() {
+    return get().user !== null;
   },
 }));

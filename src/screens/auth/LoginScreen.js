@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useAuthViewModel } from '../../viewmodels';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { handleLogin } = useAuthViewModel();
+
+  const onLoginPress = () => {
+    // Simple login: set user with email
+    handleLogin({ email, name: 'User' });
+  };
 
   return (
     <View style={styles.container}>
@@ -23,7 +30,7 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={onLoginPress}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>
