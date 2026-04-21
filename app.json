@@ -1,6 +1,26 @@
 {
-  "name": "MobileApplication",
-  "displayName": "Mobile Application",
-  "version": "1.0.0",
-  "description": "Cross-platform mobile application"
+  "expo": {
+    "name": "Mobile Application",
+    "slug": "mobile-application",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "sdkVersion": "54.0.0"
+  }
 }
