@@ -1,9 +1,29 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useAuthViewModel } from '../../viewmodels';
 
-export default function SignupScreen() {
+export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { handleSignup, loading, error, clearMessages } = useAuthViewModel();
+
+  const onSignupPress = async () => {
+    try {
+      await handleSignup({ email, password });
+    } catch (_) {
+      // Error state is handled inside the view model
+    }
+  };
+
+  const handleEmailChange = (value) => {
+    clearMessages();
+    setEmail(value);
+  };
+
+  const handlePasswordChange = (value) => {
+    clearMessages();
+    setPassword(value);
+  };
 
   return (
     <View style={styles.container}>
@@ -12,7 +32,7 @@ export default function SignupScreen() {
         style={styles.input}
         placeholder="Email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={handleEmailChange}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -20,11 +40,19 @@ export default function SignupScreen() {
         style={styles.input}
         placeholder="Password"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={handlePasswordChange}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <TouchableOpacity
+        style={[styles.button, loading && styles.buttonDisabled]}
+        onPress={onSignupPress}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>{loading ? 'Creating account...' : 'Sign Up'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -63,9 +91,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  error: {
+    color: '#d32f2f',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  link: {
+    marginTop: 16,
+    color: '#007AFF',
+    fontSize: 14,
   },
 });

@@ -2,14 +2,27 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useAuthViewModel } from '../../viewmodels';
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { handleLogin } = useAuthViewModel();
+  const { handleLogin, loading, error, clearMessages } = useAuthViewModel();
 
-  const onLoginPress = () => {
-    // Simple login: set user with email
-    handleLogin({ email, name: 'User' });
+  const onLoginPress = async () => {
+    try {
+      await handleLogin({ email, password });
+    } catch (_) {
+      // Error state is handled inside the view model
+    }
+  };
+
+  const handleEmailChange = (value) => {
+    clearMessages();
+    setEmail(value);
+  };
+
+  const handlePasswordChange = (value) => {
+    clearMessages();
+    setPassword(value);
   };
 
   return (
@@ -19,7 +32,7 @@ export default function LoginScreen() {
         style={styles.input}
         placeholder="Email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={handleEmailChange}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -27,12 +40,25 @@ export default function LoginScreen() {
         style={styles.input}
         placeholder="Password"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={handlePasswordChange}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={onLoginPress}>
-        <Text style={styles.buttonText}>Login</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <TouchableOpacity
+        style={[styles.button, loading && styles.buttonDisabled]}
+        onPress={onLoginPress}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>{loading ? 'Signing in...' : 'Login'}</Text>
       </TouchableOpacity>
+      <View style={styles.linkRow}>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+          <Text style={styles.link}>Forgot password?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+          <Text style={styles.link}>Create account</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -70,9 +96,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  error: {
+    color: '#d32f2f',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  linkRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: 320,
+  },
+  link: {
+    color: '#007AFF',
+    fontSize: 14,
   },
 });
