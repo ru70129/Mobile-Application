@@ -25,7 +25,7 @@ function MainNavigator() {
       <MainTab.Screen name="Home" component={HomeScreen} />
       <MainTab.Screen name="Events" component={EventsScreen} />
       <MainTab.Screen name="Bookings" component={BookingsScreen} />
-      <MainTab.Screen name="Dashboard" component={DashboardScreen} />
+      <MainTab.Screen name="Profile" component={DashboardScreen} />
     </MainTab.Navigator>
   );
 }

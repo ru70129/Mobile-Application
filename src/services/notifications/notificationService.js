@@ -1,36 +1,37 @@
-import { Notification } from '../../models/Notification';
+// Simple notification service - mock implementation
+import NotificationModel from '../../models/Notification';
 
-let notificationsEnabled = true;
+let enabled = false;
 
 export const notificationService = {
-  isEnabled() {
-    return notificationsEnabled;
+  isEnabled: () => enabled,
+  setEnabled: (value) => {
+    enabled = !!value;
+    console.log('Notifications enabled:', enabled);
+    return enabled;
   },
 
-  setEnabled(enabled) {
-    notificationsEnabled = enabled;
-    return notificationsEnabled;
-  },
+  scheduleEventReminder: (event) => {
+    try {
+      if (!enabled) {
+        return { success: false, error: 'Notifications are disabled' };
+      }
 
-  scheduleEventReminder(event) {
-    if (!notificationsEnabled) {
-      return {
-        success: false,
-        error: 'Notifications are disabled.',
-      };
+      const note = new NotificationModel({
+        title: `Reminder: ${event.title}`,
+        message: `Upcoming event on ${event.date} at ${event.time}`,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Simulate delivering notification (could be alert or console)
+      console.log('Simulated notification:', note);
+
+      return { success: true, data: note };
+    } catch (err) {
+      return { success: false, error: 'Failed to schedule reminder' };
     }
-
-    const notification = new Notification(
-      `${Date.now()}`,
-      'Event reminder',
-      `Reminder set for ${event.title}`,
-      new Date(),
-      'event-reminder'
-    );
-
-    return {
-      success: true,
-      data: notification,
-    };
   },
 };
+
+export default notificationService;
+

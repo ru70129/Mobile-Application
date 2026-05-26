@@ -1,9 +1,17 @@
-// Weather data model
-export class WeatherData {
-  constructor(temperature, condition, location = 'Budapest') {
-    this.temperature = temperature;
-    this.condition = condition;
-    this.location = location;
+export default class WeatherData {
+  // constructor supports either an object { temperature, condition, location }
+  // or positional args (temperature, condition, location)
+  constructor(a = {}, b, c) {
+    if (typeof a === 'object' && (b === undefined && c === undefined)) {
+      const { temperature = null, condition = '', location = '' } = a || {};
+      this.temperature = temperature;
+      this.condition = condition;
+      this.location = location;
+    } else {
+      this.temperature = a;
+      this.condition = b;
+      this.location = c || 'Budapest';
+    }
     this.updatedAt = new Date();
   }
 
